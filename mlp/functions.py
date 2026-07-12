@@ -132,7 +132,7 @@ def train_step(X_batch, y_batch, params, lr):
 
 def train(X_norm, y_onehot, params, epochs = 10, batch_size = 64, lr = 0.1):
     N = X_norm.shape[0]
-    num_batches = N // batch_size
+    num_batches = (N + batch_size - 1) // batch_size
 
     for epoch in range(epochs):
         perm = np.random.permutation(N)
@@ -142,8 +142,11 @@ def train(X_norm, y_onehot, params, epochs = 10, batch_size = 64, lr = 0.1):
         epoch_loss = 0
 
         for i in range(num_batches):
-            X_batch = X_shuffled[batch_size * i : batch_size * (i+1)]
-            y_batch = y_shuffled[batch_size * i : batch_size * (i+1)]
+            start = batch_size * i
+            end = min(batch_size * (i+1), N)
+
+            X_batch = X_shuffled[start : end]
+            y_batch = y_shuffled[start : end]
 
             params, loss = train_step(X_batch, y_batch, params, lr)
 
@@ -153,3 +156,36 @@ def train(X_norm, y_onehot, params, epochs = 10, batch_size = 64, lr = 0.1):
         print(f"Epoch {epoch+1}/{epochs}, loss: {avg_loss:.4f}")
 
     return params
+
+
+def test(X_norm, y_onehot, params, batch_size = 64):
+    N = X_norm.shape[0]
+    num_batches = (N + batch_size - 1) // batch_size
+
+    W1 = params['W1']
+    b1 = params['b1']
+    W2 = params['W2']
+    b2 = params['b2']
+
+    X_norm_flat = X_norm.reshape(X_norm.shape[0],-1)
+
+    correct = 0
+
+    for i in range(num_batches):
+        start = batch_size * i
+        end = min(batch_size*(i+1), N)
+
+        X_batch = X_norm_flat[start : end]
+        y_batch = y_onehot[start : end]
+
+        Z1, _ = fc_forward(X_batch, W1, b1)
+        A1, _ = relu_forward(Z1)
+        Z2, _ = fc_forward(A1, W2, b2)
+
+        preds = np.argmax(Z2, axis=1)
+        true_labels = np.argmax(y_batch, axis=1)
+        correct += np.sum(preds == true_labels)
+
+    accuracy = correct / N
+
+    return accuracy
