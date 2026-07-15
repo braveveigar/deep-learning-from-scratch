@@ -11,6 +11,10 @@
 ## 순전파 (Forward Propagation)
 
 ### Fully-connected layer
+<div align="center">
+<img src="../images/fully_connected_layer.png" width="50%">
+</div>
+
 $$
 Z = XW + b ( X : \text{input}, W : \text{weights}, b : \text{bias} )
 $$

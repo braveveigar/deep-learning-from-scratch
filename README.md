@@ -13,8 +13,8 @@
 
 | 단계 | 구현 대상 | 분류 | 프레임워크 | 상태 |
 | --- | --- | --- | --- | --- |
-| 1 | [MLP](mlp/) | 기초 신경망 | NumPy | 진행중 |
-| 2 | CNN (LeNet) | 기초 신경망 | NumPy | 예정 |
+| 1 | [MLP](mlp/) | 기초 신경망 | NumPy | 2026.07.15 |
+| 2 | CNN (LeNet) | 기초 신경망 | NumPy | 진행중 |
 | 3 | ResNet | Vision (CNN) | PyTorch | 예정 |
 | 4 | YOLO | Vision (Object Detection) | PyTorch | 예정 |
 | 5 | Transformer | Sequence Modeling | PyTorch | 예정 |
