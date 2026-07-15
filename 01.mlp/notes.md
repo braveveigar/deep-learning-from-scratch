@@ -12,7 +12,7 @@
 
 ### Fully-connected layer
 <div align="center">
-<img src="../images/fully_connected_layer.png" width="50%">
+<img src="./images/fully_connected_layer.png" width="50%">
 </div>
 
 $$
