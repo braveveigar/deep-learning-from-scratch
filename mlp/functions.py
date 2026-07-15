@@ -11,12 +11,12 @@ def load_mnist(path):
     with open (train_images_path,"rb") as file:
         X_train_raw = np.fromfile(file, dtype=np.uint8)
 
-    X_train = X_train_raw[16:].reshape(-1,28,28)
+    X_train = X_train_raw[16:].reshape(-1,28,28) # 헤더 16 byte 스킵
 
     with open (train_labels_path,"rb") as file:
         y_train_raw = np.fromfile(file, dtype=np.uint8)
 
-    y_train = y_train_raw[8:]
+    y_train = y_train_raw[8:] # 헤더 8 byte 스킵
 
     with open (test_images_path,"rb") as file:
         X_test_raw = np.fromfile(file, dtype=np.uint8)
@@ -41,6 +41,13 @@ def preprocess(X, y):
 
 
 def fc_forward(X, W, b):
+    '''
+    X.shape = (batch_size, input_size)
+    W.shape = (input_size, output_size)
+    b.shape = (output_size, ) -> b는 (output_size,) 형태지만 NumPy broadcasting에 의해 각 batch에 동일하게 더해짐
+
+    out.shape = (batch_size, output_size)
+    '''
 
     cache = (X,W,b)
     out = X@W+b
@@ -49,7 +56,15 @@ def fc_forward(X, W, b):
 
 
 def fc_backward(dout, cache):
+    '''
+    dout.shape = (batch_size, output_size)
+    W.T.shape = (output_size, input_size)
+    X.T.shape = (input_size, batch_size)
 
+    dX.shape = (batch_size, input_size)
+    dW.shape = (input_size, output_size)
+    db.shape = (batch_size, output_size)
+    '''
     X, W, b = cache
     dX = dout @ W.T
     dW = X.T @ dout
@@ -75,23 +90,32 @@ def relu_backward(dout, cache):
 
 
 def softmax_cross_entropy(scores, y_onehot):
+    '''
+    dscores : loss를 scores에 대해 미분한 값 (∂L/∂scores)
+    직관적 이해 : 현재 모델이 예측한 확률(scores)과 실제 정답(y)의 차이만큼 score를 조정해야 한다.
+    '''
     
     scores_shifted = scores - np.max(scores, axis = 1, keepdims=True)
+    # exp 함수에 큰 값이 들어가 overflow가 발생하는 것을 방지하기 위한 수치 안정화
     exp_scores = np.exp(scores_shifted)
-    probs = exp_scores / np.sum(exp_scores, axis=1, keepdims=True)
+    probs = exp_scores / np.sum(exp_scores, axis=1, keepdims=True) # softmax
 
     N = scores.shape[0]
     log_probs = np.log(probs)
-    loss = -np.sum(y_onehot*log_probs) / N
+    loss = -np.sum(y_onehot*log_probs) / N # cross entropy loss
 
-    dscores = (probs - y_onehot) / N
+    dscores = (probs - y_onehot) / N # softmax + cross entropy loss의 gradient (backward)
 
     return loss, dscores
 
 
 def init_params(hidden_dim = 128):
+    '''
+    He initialization : 
+    ReLu 사용 시 활성값의 분산을 유지하기 위해 weight scale을 sqrt(2 / input_size)로 조정
+    '''
 
-    W1 = np.random.randn(784, hidden_dim) * np.sqrt(2.0 / 784)
+    W1 = np.random.randn(784, hidden_dim) * np.sqrt(2.0 / 784) # He 초기화
     b1 = np.zeros(hidden_dim)
 
     W2 = np.random.randn(hidden_dim, 10) * np.sqrt(2.0 / hidden_dim)
@@ -110,16 +134,21 @@ def train_step(X_batch, y_batch, params, lr):
     b2 = params['b2']
 
     X_flat = X_batch.reshape(X_batch.shape[0], -1)
+
+    # 순전파
     Z1, cache_Z1 = fc_forward(X_flat, W1, b1)
     A1, cache_A1 = relu_forward(Z1)
     Z2, cache_Z2 = fc_forward(A1, W2, b2)
 
+    # loss 계산
     loss, dscores = softmax_cross_entropy(Z2, y_batch)
 
+    # 역전파
     dA1, dW2, db2 = fc_backward(dscores, cache_Z2)
     dZ1 = relu_backward(dA1, cache_A1)
     dX_flat, dW1, db1 = fc_backward(dZ1, cache_Z1)
 
+    # 역전파로 구한 그래디언트를 이용한 경사하강 / 가중치 업데이트
     params ={
         'W1': W1 - lr * dW1,
         'b1': b1 - lr * db1,
