@@ -120,7 +120,7 @@ $$
 \frac{\partial L}{\partial z_i}
 &=
 -y_i+p_i
-\\[4pt]
+\\
 &=
 p_i-y_i
 \end{aligned}
@@ -149,7 +149,7 @@ $$
 \frac{\partial L}{\partial x_k}
 &=
 \sum_{i=1}^{C}\frac{\partial L}{\partial z_i}\frac{\partial z_i}{\partial x_k}
-\\[4pt]
+\\
 &=
 \sum_{i=1}^{C}(p_i-y_i)W_{ik}
 \end{aligned}
@@ -187,9 +187,16 @@ $$
 \frac{\partial L}{\partial b} = p - y
 $$
 
-(배치 크기 $N$일 경우: $\displaystyle \frac{\partial L}{\partial b} = \sum_{n=1}^{N}(p^{(n)}-y^{(n)})$)
+- 배치의 크기 $N$
+
+$$
+\frac{\partial L}{\partial b}
+=
+\sum_{n=1}^{N}(p^{(n)}-y^{(n)})
+$$
 
 - ReLU의 gradient
+
 $$
 f'(x)=
 \begin{cases}
@@ -205,22 +212,27 @@ $$
 **배경**: 레이어를 통과할 때마다 활성값의 분산이 변하면(폭주/소멸) 깊은 신경망 학습이 불안정해진다. 그래서 **분산을 유지**하는 것이 목표.
 
 **분산 전파 공식**:
+
 $$
 \text{Var}(z) = n \cdot \text{Var}(W) \cdot \text{Var}(x)
 $$
+
 ($n$ = input size, fan-in)
 
 **ReLU의 영향**: 음수를 0으로 죽이므로, 출력 분산이 절반으로 줄어든다.
+
 $$
 \text{Var}(\text{ReLU}(z)) = \frac{1}{2}\text{Var}(z)
 $$
 
 **보상**: 분산 유지를 위해 $\text{Var}(z)$를 2배로 키워야 함.
+
 $$
 n \cdot \text{Var}(W) = 2 \quad\Longrightarrow\quad \text{Var}(W) = \frac{2}{n}
 $$
 
 **표준편차 (실제 구현에 사용)**:
+
 $$
 \sigma_W = \sqrt{\frac{2}{n}}
 $$
