@@ -67,11 +67,13 @@ $$
 $$
 
 **Step A**:
+
 $$
 \frac{\partial L}{\partial p_j} = -\frac{y_j}{p_j}
 $$
 
 **Step B**: (앞서 구한 softmax 미분, 인덱스 $i \leftrightarrow j$)
+
 $$
 \frac{\partial p_j}{\partial z_i} = p_j(\delta_{ij} - p_i)
 $$
