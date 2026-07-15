@@ -190,9 +190,7 @@ $$
 - 배치의 크기 $N$
 
 $$
-\frac{\partial L}{\partial b}
-=
-\sum_{n=1}^{N}(p^{(n)}-y^{(n)})
+\frac{\partial L}{\partial b}=\sum_{n=1}^{N}(p^{(n)}-y^{(n)})
 $$
 
 - ReLU의 gradient
