@@ -63,8 +63,9 @@ def fc_backward(dout, cache):
 
     dX.shape = (batch_size, input_size)
     dW.shape = (input_size, output_size)
-    db.shape = (batch_size, output_size)
+    db.shape = (output_size,)
     '''
+
     X, W, b = cache
     dX = dout @ W.T
     dW = X.T @ dout

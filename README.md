@@ -16,16 +16,7 @@
 | 1 | [MLP](mlp/) | 기초 신경망 | NumPy | 2026.07.15 |
 | 2 | CNN (LeNet) | 기초 신경망 | NumPy | 진행중 |
 | 3 | ResNet | Vision (CNN) | PyTorch | 예정 |
-| 4 | YOLO | Vision (Object Detection) | PyTorch | 예정 |
-| 5 | Transformer | Sequence Modeling | PyTorch | 예정 |
-| 6 | ViT | Vision (Transformer) | PyTorch | 예정 |
-| 7 | CLIP | Vision-Language | PyTorch | 예정 |
-| 8 | GPT | 언어 모델 | PyTorch | 예정 |
-| 9 | RT-1 | Vision-Language-Action | PyTorch | 예정 |
-| 10 | RT-2 | Vision-Language-Action | PyTorch | 예정 |
-| 11 | OpenVLA | Vision-Language-Action | PyTorch | 예정 |
-| 12 | PPO | 강화학습 | PyTorch | 예정 |
-| 13 | SAC | 강화학습 | PyTorch | 예정 |
+
 
 ## 구성 방식
 
@@ -34,19 +25,3 @@
 - 구현 코드 및 실습 노트북
 - 해당 디렉토리 전용 `README.md` (구현 내용, 설치 방법, 실행 방법)
 - 필요한 경우 `requirements.txt`
-
-## 진행 상황
-
-- [x] MLP — MNIST 분류, NumPy로 forward/backward 직접 구현 (`mlp/`)
-- [ ] CNN (LeNet)
-- [ ] ResNet
-- [ ] YOLO
-- [ ] Transformer
-- [ ] ViT
-- [ ] CLIP
-- [ ] GPT
-- [ ] RT-1
-- [ ] RT-2
-- [ ] OpenVLA
-- [ ] PPO
-- [ ] SAC
